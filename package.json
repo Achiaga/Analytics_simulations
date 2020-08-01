@@ -1,5 +1,5 @@
 {
-	"name": "testBueno",
+	"name": "ninja-simulations",
 	"version": "1.0.0",
 	"description": "",
 	"private": true,
@@ -25,6 +25,7 @@
 		"xml-loader": "^1.2.1"
 	},
 	"dependencies": {
-		"lodash": "^4.17.19"
+		"lodash": "^4.17.19",
+		"three": "^0.118.3"
 	}
 }

@@ -15,7 +15,7 @@ module.exports = {
 	plugins: [
 		new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
 		new HtmlWebpackPlugin({
-			title: 'Output Management',
+			title: 'Ninja Simulations',
 		}),
 	],
 	output: {
@@ -43,6 +43,11 @@ module.exports = {
 			{
 				test: /\.xml$/,
 				use: ['xml-loader'],
+			},
+
+			{
+				test: /\.(glb|gltf)$/,
+				use: 'raw-loader',
 			},
 		],
 	},
