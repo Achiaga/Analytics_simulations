@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Mesh } from 'three';
 
 var BlablapCollisionDist = 3;
 

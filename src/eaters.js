@@ -4,8 +4,8 @@ import { setRandomCoords, getRandomPositiveOrNegative } from './utils';
 
 let loader = new GLTFLoader();
 
-let blablapArmy = {};
-let numEaters;
+let eatersArmy = {};
+let quantityEaters;
 
 const blablapSkeleton = {
 	x: 1,
@@ -13,8 +13,8 @@ const blablapSkeleton = {
 	z: 0.2,
 };
 
-const createBlablapBody = (callback, blaWarrior, index, scene) => {
-	const [positionX, positionZ] = setOriginPostion(index);
+const createBlablapBody = (callback, blaWarrior, eaterIndex, scene) => {
+	const [positionX, positionZ] = setOriginPostion(eaterIndex);
 	const [actualDestX, actualDestZ] = setRandomCoords(7);
 	const [outDestX, outDestZ] = setRandomCoords(15.5, 'circle');
 	let blablap;
@@ -24,7 +24,7 @@ const createBlablapBody = (callback, blaWarrior, index, scene) => {
 			blablap = gltf.scene;
 			scene.add(blablap);
 
-			blablap.name = 'blablap' + index;
+			blablap.name = 'blablap' + eaterIndex;
 
 			blablap.position.x = positionX;
 			blablap.position.z = positionZ;
@@ -41,8 +41,6 @@ const createBlablapBody = (callback, blaWarrior, index, scene) => {
 				reproduce: false,
 				hasFinsihed: false,
 			};
-
-			// blablap.userData.stopCollision = false;
 			callback(blablap, blaWarrior);
 		},
 		function (xhr) {
@@ -56,54 +54,43 @@ const createBlablapBody = (callback, blaWarrior, index, scene) => {
 	);
 };
 
-const loopArmyObjects = (num, name, obj) => {
+const loopCreateEmptyObjects = (num, name, obj) => {
 	for (var i = 0; i < num; i++) {
-		blablapArmy[`name${i}`] = {};
+		obj[`${name}${i}`] = {};
 	}
 };
 
-// const createBlablapArmy = () => {
-// 	const BlablapName = 'bla';
-// 	for (var i = 0; i < numEaters; i++) {
-// 		let blablap = BlablapName + i;
-// 		blablapArmy = {
-// 			...blablapArmy,
-// 			[blablap]: {},
-// 		};
-// 	}
-// };
-
-const createBlablapArmy = () => {
+const createeatersArmy = () => {
 	const BlablapName = 'bla';
-	loopArmyObjects(numEaters, BlablapName, blablapArmy);
+	loopCreateEmptyObjects(quantityEaters, BlablapName, eatersArmy);
 };
 
 const populateArmy = (scene) => {
-	createBlablapArmy();
-	Object.keys(blablapArmy).forEach((body, index) =>
-		createBlablapBody(addPropsBlablapArmy, body, index, scene)
+	createeatersArmy();
+	Object.keys(eatersArmy).forEach((body, eaterIndex) =>
+		createBlablapBody(addPropseatersArmy, body, eaterIndex, scene)
 	);
 };
 
-const createSkeletonBlablap = (blablap, index) => {
+const createSkeletonBlablap = (blablap, eaterIndex) => {
 	var geometry = new THREE.BoxGeometry(blablapSkeleton.x, blablapSkeleton.y, blablapSkeleton.z);
 	var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 	var cube = new THREE.Mesh(geometry, material);
 	blablap.add(cube);
-	cube.name = 'cube' + index;
+	cube.name = 'cube' + eaterIndex;
 	cube.position.y = 0;
 	cube.position.z = -0.5;
 };
 
-const addPropsBlablapArmy = (blablap, blaWarrior, index) => {
-	blablapArmy[blaWarrior] = blablap;
-	createSkeletonBlablap(blablap, index);
+const addPropseatersArmy = (blablap, blaWarrior, eaterIndex) => {
+	eatersArmy[blaWarrior] = blablap;
+	createSkeletonBlablap(blablap, eaterIndex);
 };
 
-function setOriginPostion(blablaIndex) {
-	const angleBlabap = getBlablaInitalPos(blablaIndex);
-	let posX = Math.cos(angleBlabap) * 14;
-	let posY = Math.sin(angleBlabap) * 14;
+function setOriginPostion(eaterIndex) {
+	const angleEater = getBlablaInitalPos(eaterIndex);
+	let posX = Math.cos(angleEater) * 14;
+	let posY = Math.sin(angleEater) * 14;
 	return [posX, posY];
 }
 
@@ -111,13 +98,14 @@ function convertDegreesToRads(degrees) {
 	return (degrees * Math.PI) / 180;
 }
 
-function getBlablaInitalPos(blablaIndex) {
-	const degreesPerBlaBla = 360 / numEaters;
-	return convertDegreesToRads(degreesPerBlaBla) * blablaIndex;
+function getBlablaInitalPos(eaterIndex) {
+	const degreesPerBlaBla = 360 / quantityEaters;
+	return convertDegreesToRads(degreesPerBlaBla) * eaterIndex;
 }
 
-export const initEaters = (scene, numBlablaps) => {
-	numEaters = numBlablaps;
+export const initEaters = (scene, numEaters) => {
+	eatersArmy = {};
+	quantityEaters = numEaters;
 	populateArmy(scene);
-	return blablapArmy;
+	return eatersArmy;
 };

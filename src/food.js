@@ -1,40 +1,35 @@
 import * as THREE from 'three';
-import { getRandomPositiveOrNegative } from './utils';
+import { setRandomCoords } from './utils';
 
 const foodSkeleton = {
 	radius: 0.25,
 	widthSgementes: 20,
 	heightSegmets: 20,
 };
-let numberFood;
+
+let quantityFood;
 let FoodCollection = {};
 var foodObjectsCollision = [];
 
-const setRandomPositionFood = () => {
-	let randX = getRandomPositiveOrNegative(Math.random() * 6);
-	let randY = getRandomPositiveOrNegative(Math.random() * 6);
-	return [randX, randY];
+const loopCreateObjects = (num, name, obj, fillObj, scene) => {
+	for (var i = 0; i < num - 1; i++) {
+		obj[`${name}${i}`] = fillObj(i, scene);
+	}
 };
 
 const createFoodCollection = (scene) => {
 	let foodName = 'food';
-	for (var i = 0; i < numberFood; i++) {
-		let foodItem = foodName + i;
-		FoodCollection = {
-			...FoodCollection,
-			[foodItem]: createSkeletonFood(i, scene),
-		};
-	}
+	loopCreateObjects(quantityFood, foodName, FoodCollection, createSkeletonFood, scene);
 };
 
 const createSkeletonFood = (index, scene) => {
-	const [randX, randZ] = setRandomPositionFood();
+	const [randX, randZ] = setRandomCoords(6);
 	var geometry = new THREE.SphereBufferGeometry(
 		foodSkeleton.radius,
 		foodSkeleton.widthSgementes,
 		foodSkeleton.heightSegmets
 	);
-	var material = new THREE.MeshBasicMaterial({ color: 0x1caf1e });
+	var material = new THREE.MeshBasicMaterial({ color: 0xff00f7 });
 	var foodBody = new THREE.Mesh(geometry, material);
 	scene.add(foodBody);
 	foodBody.position.x = randX;
@@ -45,8 +40,10 @@ const createSkeletonFood = (index, scene) => {
 	return foodBody;
 };
 
-export const initFood = (scene, numFood) => {
-	numberFood = numFood;
+export const initFood = (scene, numFood, getFoodRandom) => {
+	FoodCollection = {};
+	foodObjectsCollision = [];
+	quantityFood = numFood;
 	createFoodCollection(scene);
-	return [FoodCollection, foodObjectsCollision];
+	return [FoodCollection, foodObjectsCollision, quantityFood];
 };

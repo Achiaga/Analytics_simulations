@@ -24,15 +24,24 @@ export function setRandomCoords(radius, circle) {
 
 //MOVEMENT MATHS
 export function getNextPos(x1, z1, x2, z2, vel) {
-	const distX = x2 - x1;
-	const distZ = z2 - z1;
-	const dist = Math.sqrt(distX * distX + distZ * distZ);
-	const ratio = vel / dist;
-	const x_move = ratio * distX;
-	const y_move = ratio * distZ;
-	const new_x_pos = x_move + x1;
-	const new_y_pos = y_move + z1;
+	const distX = pointsDistance(x1, x2);
+	const distZ = pointsDistance(z1, z2);
+	const ratio = vel / circleEquation(distX, distZ);
+	const new_x_pos = incrementMovement(ratio, distX) + x1;
+	const new_y_pos = incrementMovement(ratio, distZ) + z1;
 	return [new_x_pos, new_y_pos];
+}
+
+function pointsDistance(a, b) {
+	return b - a;
+}
+
+function circleEquation(distX, distZ) {
+	return Math.sqrt(distX * distX + distZ * distZ);
+}
+
+function incrementMovement(ratio, a) {
+	return ratio * a;
 }
 
 // Collision Graphic Helper

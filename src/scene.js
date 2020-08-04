@@ -6,7 +6,7 @@ let camera, scene, light, directionalLight, renderer;
 const fov = 45;
 const aspect = window.innerWidth / window.innerHeight;
 const near = 0.25;
-const far = 100;
+const far = 1000;
 const sceneBgColor = 0xfffffff;
 const cameraPosX = -12;
 const cameraPosY = 18;

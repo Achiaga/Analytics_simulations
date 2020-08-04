@@ -10,7 +10,15 @@ let eaterArrivedDest = (eater) => {
 
 let finishCont = 0;
 
-export function randomMovement(eater, vel, foodObjectsCollision, foodCollection, numBlablaps, scene) {
+export function randomMovement(
+	eater,
+	vel,
+	foodObjectsCollision,
+	foodCollection,
+	numEaters,
+	modifyReproduce,
+	scene
+) {
 	if (!eater || !eater.position || eater.userData.hasFinsihed) return;
 
 	const { x: posX, z: posZ } = eater.position;
@@ -38,11 +46,11 @@ export function randomMovement(eater, vel, foodObjectsCollision, foodCollection,
 		eater.userData.hasFinsihed = true;
 		finishCont += 1;
 
-		if (finishCont === numBlablaps) {
+		if (finishCont === numEaters) {
+			console.log('enter');
 			finishCont = 0;
-			setTimeout(() => {
-				// handleRestart();
-			}, 1000);
+			modifyReproduce(true);
+			return;
 		}
 	}
 	return;

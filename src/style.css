@@ -5,3 +5,17 @@ body {
 	height: 100%;
 	overflow: hidden;
 }
+
+button {
+	position: absolute;
+	top: 10%;
+	left: 10%;
+	z-index: 999999;
+	font-weight: bold;
+	padding: 0 40px;
+	background: salmon;
+	border: none;
+}
+button:hover {
+	background: lightsalmon;
+}
