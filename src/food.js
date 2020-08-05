@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { setRandomCoords } from './utils';
+import { setRandomCoords, setUniformDistribution } from './utils';
 
 const foodSkeleton = {
 	radius: 0.25,
@@ -7,7 +7,7 @@ const foodSkeleton = {
 	heightSegmets: 20,
 };
 
-let quantityFood;
+let quantityFood, random, distributionFood;
 let FoodCollection = {};
 var foodObjectsCollision = [];
 
@@ -23,7 +23,9 @@ const createFoodCollection = (scene) => {
 };
 
 const createSkeletonFood = (index, scene) => {
-	const [randX, randZ] = setRandomCoords(6);
+	let [posX, posZ] = setRandomCoords(6);
+	if (!distributionFood) [posX, posZ] = setUniformDistribution(index, quantityFood);
+
 	var geometry = new THREE.SphereBufferGeometry(
 		foodSkeleton.radius,
 		foodSkeleton.widthSgementes,
@@ -32,11 +34,19 @@ const createSkeletonFood = (index, scene) => {
 	var material = new THREE.MeshBasicMaterial({ color: 0xff00f7 });
 	var foodBody = new THREE.Mesh(geometry, material);
 	scene.add(foodBody);
-	foodBody.position.x = randX;
-	foodBody.position.z = randZ;
+	foodBody.position.x = posX;
+	foodBody.position.z = posZ;
 	foodBody.position.y = 1.6;
 	foodBody.name = 'food' + index;
 	foodObjectsCollision.push(foodBody);
+	if (!distributionFood) {
+		var foodBodyb = new THREE.Mesh(geometry, material);
+		foodBody.add(foodBodyb);
+		foodBodyb.position.x += 0.4;
+		foodBodyb.position.z += 0.4;
+		foodBodyb.name = 'foodb' + index;
+	}
+
 	return foodBody;
 };
 
@@ -44,6 +54,8 @@ export const initFood = (scene, numFood, getFoodRandom) => {
 	FoodCollection = {};
 	foodObjectsCollision = [];
 	quantityFood = numFood;
+	random = getFoodRandom;
+	distributionFood = getFoodRandom;
 	createFoodCollection(scene);
 	return [FoodCollection, foodObjectsCollision, quantityFood];
 };

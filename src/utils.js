@@ -22,6 +22,38 @@ export function setRandomCoords(radius, circle) {
 	return [randX, randZ];
 }
 
+// Food Uniform Distribution
+export function setUniformDistribution(index, num) {
+	let layer5 = Math.round(num / 2.5);
+	let layer4 = Math.round(num / 3.3);
+	let layer3 = Math.round(num / 5);
+
+	if (index > layer5 + layer4) {
+		return setOriginPostion(index, layer3, 3);
+	}
+	if (index > layer5) {
+		return setOriginPostion(index, layer4, 6);
+	}
+	return setOriginPostion(index, layer5, 10);
+}
+
+// Eater Uniform Distribution
+export function setOriginPostion(index, num, radius) {
+	const angleEater = getBlablaInitalPos(index, num);
+	let posX = Math.cos(angleEater) * radius;
+	let posZ = Math.sin(angleEater) * radius;
+	return [posX, posZ];
+}
+
+function convertDegreesToRads(degrees) {
+	return (degrees * Math.PI) / 180;
+}
+
+function getBlablaInitalPos(index, num) {
+	const degreesPerBlaBla = 360 / num;
+	return convertDegreesToRads(degreesPerBlaBla) * index;
+}
+
 //MOVEMENT MATHS
 export function getNextPos(x1, z1, x2, z2, vel) {
 	const distX = pointsDistance(x1, x2);
@@ -42,6 +74,12 @@ function circleEquation(distX, distZ) {
 
 function incrementMovement(ratio, a) {
 	return ratio * a;
+}
+
+// Delete Element Scene
+export function deleteElScene(el, scene) {
+	var selectedObject = scene.getObjectByName(el);
+	scene.remove(selectedObject);
 }
 
 // Collision Graphic Helper

@@ -15,10 +15,11 @@ let isRunning = true;
 let eaterArmy, foodCollection, foodObjectsCollision;
 
 let numEaters = 4;
-let numFood = 5;
+let numKrans = 2;
+let numFood = 20;
 
 //MOVEMENT
-const vel = 0.1;
+const vel = 0.2;
 let getFoodRandom = false;
 
 //REPRODUCE
@@ -41,7 +42,7 @@ const handleGround = () => {
 
 // Create Eaters
 const handleInitEater = () => {
-	eaterArmy = initEaters(scene, numEaters);
+	eaterArmy = initEaters(scene, numEaters, numKrans, foodCollection);
 };
 
 // Create Food
@@ -61,23 +62,38 @@ const modifyReproduce = (state) => {
 // Handle Movement
 const handleMovement = (eater, index) => {
 	if (getFoodRandom) {
-		return hanldeRandomMovement(eaterArmy[eater], vel);
+		return hanldeRandomMovement(eaterArmy[eater]);
 	}
-	let food = foodCollection[Object.keys(foodCollection)[index]];
-	return hanldeGetFoodMovement(eaterArmy[eater], food, vel);
+	return hanldeGetFoodMovement(eaterArmy[eater], index);
 };
 
 const hanldeRandomMovement = (eater) => {
-	randomMovement(eater, vel, foodObjectsCollision, foodCollection, numEaters, modifyReproduce, scene);
+	randomMovement(
+		eater,
+		vel,
+		foodObjectsCollision,
+		foodCollection,
+		numEaters,
+		numKrans,
+		modifyReproduce,
+		scene
+	);
 };
 
-const hanldeGetFoodMovement = (eater, food) => {
-	getFoodMovement(eater, food, numEaters, vel);
+const hanldeGetFoodMovement = (eater, index) => {
+	getFoodMovement(eater, numEaters, numKrans, vel, modifyReproduce, scene);
 };
 
 // Handle Reproduce
 const handleReproduce = () => {
-	numEaters = reproduce(eaterArmy, foodCollection, foodObjectsCollision, numEaters, scene);
+	[numEaters, numKrans] = reproduce(
+		eaterArmy,
+		foodCollection,
+		foodObjectsCollision,
+		numEaters,
+		numKrans,
+		scene
+	);
 	handleInitEater();
 	handleInitFood();
 	shouldReproduce = false;
@@ -107,6 +123,6 @@ var GameLoop = function () {
 handleInitScene();
 handlePause();
 handleGround();
-handleInitEater();
 handleInitFood();
+handleInitEater();
 GameLoop();

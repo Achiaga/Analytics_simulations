@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { setRandomCoords, getRandomPositiveOrNegative } from './utils';
+import { setRandomCoords, setOriginPostion } from './utils';
 
 let loader = new GLTFLoader();
 
+let quantityEaters, quantityKrans, totalOrganism;
 let eatersArmy = {};
-let quantityEaters;
 
 const blablapSkeleton = {
 	x: 1,
@@ -13,17 +13,18 @@ const blablapSkeleton = {
 	z: 0.2,
 };
 
-const createBlablapBody = (callback, blaWarrior, eaterIndex, scene) => {
-	const [positionX, positionZ] = setOriginPostion(eaterIndex);
+const createBlablapBody = (callback, blaWarrior, eaterIndex, foodSelected, scene) => {
+	const [positionX, positionZ] = setOriginPostion(eaterIndex, totalOrganism, 15);
 	const [actualDestX, actualDestZ] = setRandomCoords(7);
-	const [outDestX, outDestZ] = setRandomCoords(15.5, 'circle');
-	let blablap;
-	return loader.load(
-		'blabla.gltf',
-		function (gltf) {
-			blablap = gltf.scene;
-			scene.add(blablap);
+	const [outDestX, outDestZ] = [positionX, positionZ];
+	const raceEater = eaterIndex < quantityEaters ? 'blabla.gltf' : 'redBlabla.gltf';
+	const raceType = eaterIndex < quantityEaters ? 'blabla' : 'kran';
 
+	return loader.load(
+		raceEater,
+		function (gltf) {
+			let blablap = gltf.scene;
+			scene.add(blablap);
 			blablap.name = 'blablap' + eaterIndex;
 
 			blablap.position.x = positionX;
@@ -31,15 +32,19 @@ const createBlablapBody = (callback, blaWarrior, eaterIndex, scene) => {
 			blablap.position.y = 1.8;
 
 			blablap.userData = {
-				...blablap.position,
-				actualDestX: actualDestX,
-				actualDestZ: actualDestZ,
-				outDestX: outDestX,
-				outDestZ: outDestZ,
 				eatenFood: 0,
 				feed: false,
 				reproduce: false,
 				hasFinsihed: false,
+				race: raceType,
+				...blablap.position,
+				actualDestX: actualDestX,
+				actualDestZ: actualDestZ,
+				foodName: foodSelected.name,
+				foodPosX: foodSelected.position.x,
+				foodPosZ: foodSelected.position.z,
+				outDestX: outDestX,
+				outDestZ: outDestZ,
 			};
 			callback(blablap, blaWarrior);
 		},
@@ -54,27 +59,35 @@ const createBlablapBody = (callback, blaWarrior, eaterIndex, scene) => {
 	);
 };
 
-const loopCreateEmptyObjects = (num, name, obj) => {
+const loopCreateEmptyObjects = (num, blablaname, kransname, obj) => {
+	let name;
 	for (var i = 0; i < num; i++) {
-		obj[`${name}${i}`] = {};
+		name = i < quantityEaters ? blablaname : kransname;
+		obj[`${name}_${i + 1}`] = {};
 	}
 };
 
 const createeatersArmy = () => {
-	const BlablapName = 'bla';
-	loopCreateEmptyObjects(quantityEaters, BlablapName, eatersArmy);
+	const BlablaName = 'bla';
+	const KransName = 'kran';
+	loopCreateEmptyObjects(totalOrganism, BlablaName, KransName, eatersArmy);
 };
 
-const populateArmy = (scene) => {
+const populateArmy = (foodCollection, scene) => {
+	let foodSelectedArray = [];
 	createeatersArmy();
-	Object.keys(eatersArmy).forEach((body, eaterIndex) =>
-		createBlablapBody(addPropseatersArmy, body, eaterIndex, scene)
-	);
+	Object.keys(eatersArmy).forEach((body, eaterIndex) => {
+		let randFood = Math.round(Math.random() * Object.keys(foodCollection).length - 1);
+		let foodSelected = foodCollection[Object.keys(foodCollection)[randFood]];
+		// foodSelectedArray.push(foodSelected.name);
+		// console.log(foodSelectedArray);
+		createBlablapBody(addPropseatersArmy, body, eaterIndex, foodSelected, scene);
+	});
 };
 
 const createSkeletonBlablap = (blablap, eaterIndex) => {
 	var geometry = new THREE.BoxGeometry(blablapSkeleton.x, blablapSkeleton.y, blablapSkeleton.z);
-	var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+	var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
 	var cube = new THREE.Mesh(geometry, material);
 	blablap.add(cube);
 	cube.name = 'cube' + eaterIndex;
@@ -87,25 +100,12 @@ const addPropseatersArmy = (blablap, blaWarrior, eaterIndex) => {
 	createSkeletonBlablap(blablap, eaterIndex);
 };
 
-function setOriginPostion(eaterIndex) {
-	const angleEater = getBlablaInitalPos(eaterIndex);
-	let posX = Math.cos(angleEater) * 14;
-	let posY = Math.sin(angleEater) * 14;
-	return [posX, posY];
-}
-
-function convertDegreesToRads(degrees) {
-	return (degrees * Math.PI) / 180;
-}
-
-function getBlablaInitalPos(eaterIndex) {
-	const degreesPerBlaBla = 360 / quantityEaters;
-	return convertDegreesToRads(degreesPerBlaBla) * eaterIndex;
-}
-
-export const initEaters = (scene, numEaters) => {
+export const initEaters = (scene, numEaters, numKrans, foodCollection) => {
 	eatersArmy = {};
 	quantityEaters = numEaters;
-	populateArmy(scene);
+	quantityKrans = numKrans;
+	totalOrganism = quantityEaters + quantityKrans;
+	console.log(foodCollection);
+	populateArmy(foodCollection, scene);
 	return eatersArmy;
 };

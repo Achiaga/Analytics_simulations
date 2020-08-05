@@ -8,8 +8,8 @@ export function initButton(modifyPause) {
 	body.appendChild(button);
 
 	button.addEventListener('click', function (e) {
-		const isPlaying = e.target.innerHTML === 'Restart';
-		if (!isPlaying) e.target.innerHTML = 'Restart';
+		const isPlaying = e.target.innerHTML === 'Play';
+		if (!isPlaying) e.target.innerHTML = 'Play';
 		if (isPlaying) e.target.innerHTML = 'Pause';
 		modifyPause(isPlaying);
 		return;

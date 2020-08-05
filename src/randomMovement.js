@@ -16,6 +16,7 @@ export function randomMovement(
 	foodObjectsCollision,
 	foodCollection,
 	numEaters,
+	numKrans,
 	modifyReproduce,
 	scene
 ) {
@@ -46,7 +47,7 @@ export function randomMovement(
 		eater.userData.hasFinsihed = true;
 		finishCont += 1;
 
-		if (finishCont === numEaters) {
+		if (finishCont === numEaters + numKrans) {
 			console.log('enter');
 			finishCont = 0;
 			modifyReproduce(true);

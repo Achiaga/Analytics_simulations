@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Mesh } from 'three';
+import { deleteElScene } from './utils';
 
 var BlablapCollisionDist = 3;
 
@@ -32,14 +32,14 @@ export function detectBlablapCollision(eater, foodObjectsCollision, foodCollecti
 
 function foodDetect(ray, distance, eater, foodObjectsCollision, foodCollection, scene) {
 	var intersects = ray.intersectObjects(foodObjectsCollision);
+
 	for (var i = 0; i < intersects.length; i++) {
 		// Check if there's a collision
 		if (intersects[i].distance < distance && !eater.userData.feed) {
 			eater.userData.eatenFood = 1;
 
 			//Remove Object From Scene
-			var selectedObject = scene.getObjectByName(intersects[i].object.name);
-			scene.remove(selectedObject);
+			deleteElScene(intersects[i].object.name, scene);
 
 			// Delete From Food Collection
 			const nameColladiblaFood = intersects[i].object.name;
