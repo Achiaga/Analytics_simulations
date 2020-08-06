@@ -14,7 +14,7 @@ let isRunning = true;
 //OBJECTS
 let eaterArmy, foodCollection, foodObjectsCollision;
 
-let numEaters = 4;
+let numEaters = 10;
 let numKrans = 2;
 let numFood = 20;
 

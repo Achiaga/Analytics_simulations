@@ -2,8 +2,8 @@ import { getNextPos, deleteElScene } from './utils';
 
 let eaterArrivedDest = (eater) => {
 	return (
-		Math.abs(eater.position.x.toFixed(1) - eater.userData.outDestX.toFixed(1)) < 1 &&
-		Math.abs(eater.position.z.toFixed(1) - eater.userData.outDestZ.toFixed(1)) < 1
+		Math.abs(eater.position.x.toFixed(1) - eater.userData.outDestX.toFixed(1)) < 2 &&
+		Math.abs(eater.position.z.toFixed(1) - eater.userData.outDestZ.toFixed(1)) < 2
 	);
 };
 
@@ -23,15 +23,15 @@ export function getFoodMovement(eater, numEaters, numKrans, vel, modifyReproduce
 
 	if (Math.abs(posX - actualDestX) < 1 && Math.abs(posZ - actualDestZ) < 1) {
 		if (!eater.userData.feed) arrivedFoodCont += 1;
-		console.log(arrivedFoodCont);
 		eater.userData.feed = true;
-		if (arrivedFoodCont === numEaters + numKrans) {
+		if (arrivedFoodCont === numEaters + numKrans && !eater.userData.hasMoved) {
 			setInterval(() => {
-				deleteElScene(eater.userData.foodName, scene);
-				eater.userData.hasMoved = true;
+				let foodName = eater.userData.foodName;
+				deleteElScene(foodName, scene);
 				eater.userData.actualDestX = eater.userData.outDestX;
 				eater.userData.actualDestZ = eater.userData.outDestZ;
 			}, 1000);
+			eater.userData.hasMoved = true;
 		}
 		return;
 	}
@@ -44,9 +44,8 @@ export function getFoodMovement(eater, numEaters, numKrans, vel, modifyReproduce
 	if (eaterArrivedDest(eater) && eater.userData.hasMoved) {
 		eater.userData.hasFinsihed = true;
 		finishCont += 1;
-		console.log(eater);
 
-		if (finishCont === numEaters) {
+		if (finishCont === numEaters + numKrans) {
 			finishCont = 0;
 			// modifyReproduce(true);
 			return;

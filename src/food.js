@@ -12,7 +12,7 @@ let FoodCollection = {};
 var foodObjectsCollision = [];
 
 const loopCreateObjects = (num, name, obj, fillObj, scene) => {
-	for (var i = 0; i < num - 1; i++) {
+	for (var i = 0; i < num; i++) {
 		obj[`${name}${i}`] = fillObj(i, scene);
 	}
 };
@@ -44,7 +44,6 @@ const createSkeletonFood = (index, scene) => {
 		foodBody.add(foodBodyb);
 		foodBodyb.position.x += 0.4;
 		foodBodyb.position.z += 0.4;
-		foodBodyb.name = 'foodb' + index;
 	}
 
 	return foodBody;

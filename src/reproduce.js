@@ -1,7 +1,7 @@
 // Handle Restart
 let generation = 0;
 
-export const reproduce = (eaterArmy, foodCollection, foodObjectsCollision, numEaters, numKrans, scene) => {
+export const reproduce = (eaterArmy, foodCollection, foodObjectsCollision, scene) => {
 	let eatersReproduce = 0;
 	let quantityEaters = 0;
 	let quantityKrans = 0;

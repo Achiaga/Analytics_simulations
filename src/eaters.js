@@ -15,8 +15,8 @@ const blablapSkeleton = {
 
 const createBlablapBody = (callback, blaWarrior, eaterIndex, foodSelected, scene) => {
 	const [positionX, positionZ] = setOriginPostion(eaterIndex, totalOrganism, 15);
-	const [actualDestX, actualDestZ] = setRandomCoords(7);
 	const [outDestX, outDestZ] = [positionX, positionZ];
+	const [actualDestX, actualDestZ] = setRandomCoords(7);
 	const raceEater = eaterIndex < quantityEaters ? 'blabla.gltf' : 'redBlabla.gltf';
 	const raceType = eaterIndex < quantityEaters ? 'blabla' : 'kran';
 
@@ -63,7 +63,7 @@ const loopCreateEmptyObjects = (num, blablaname, kransname, obj) => {
 	let name;
 	for (var i = 0; i < num; i++) {
 		name = i < quantityEaters ? blablaname : kransname;
-		obj[`${name}_${i + 1}`] = {};
+		obj[`${name}_${i}`] = {};
 	}
 };
 
@@ -73,16 +73,68 @@ const createeatersArmy = () => {
 	loopCreateEmptyObjects(totalOrganism, BlablaName, KransName, eatersArmy);
 };
 
+let FoodIdList = [];
+let FoodBannedList = [];
+let possibleMatchBlablas = {};
+let matchBlablas = {};
+
+const randomNumber = (max, min) => {
+	return Math.floor(Math.random() * (max - min)) + min;
+};
+
+const generateNewRandom = (randFood, foodCollectionKeys) => {
+	const lenght = foodCollectionKeys.length - 1;
+	if (randFood < lenght / 2) return randomNumber(lenght, randFood + 1);
+	if (randFood >= lenght / 2) return randomNumber(randFood - 1, 0);
+};
+
+const checkFoodRep = (FoodID, randFood, eaterName, foodCollectionKeys) => {
+	if (FoodBannedList.includes(FoodID)) {
+		randFood = generateNewRandom(randFood, foodCollectionKeys);
+		console.log(possibleMatchBlablas[FoodID]);
+		console.log({ eaterName });
+		return randFood;
+	}
+	if (!FoodIdList.includes(FoodID)) {
+		FoodIdList.push(FoodID);
+		possibleMatchBlablas = {
+			...possibleMatchBlablas,
+			[FoodID]: eaterName,
+		};
+		return randFood;
+	}
+	if (FoodIdList.includes(FoodID)) {
+		FoodIdList.push(FoodID);
+		FoodBannedList.push(FoodID);
+		console.log(possibleMatchBlablas[FoodID]);
+		console.log({ eaterName });
+		// matchBlablas = {
+		// 	...matchBlablas,
+		// 	[eaterName]:
+		// }
+		return randFood;
+	}
+
+	return randFood;
+};
+
+const assignRandomFood = (foodCollection, eaterName) => {
+	const foodCollectionKeys = Object.keys(foodCollection);
+	let randFood = Math.floor(Math.random() * (foodCollectionKeys.length - 1));
+	const FoodID = foodCollection[foodCollectionKeys[randFood]].uuid;
+	randFood = checkFoodRep(FoodID, randFood, eaterName, foodCollectionKeys);
+	let foodSelected = foodCollection[foodCollectionKeys[randFood]];
+	return foodSelected;
+};
+
 const populateArmy = (foodCollection, scene) => {
-	let foodSelectedArray = [];
 	createeatersArmy();
-	Object.keys(eatersArmy).forEach((body, eaterIndex) => {
-		let randFood = Math.round(Math.random() * Object.keys(foodCollection).length - 1);
-		let foodSelected = foodCollection[Object.keys(foodCollection)[randFood]];
-		// foodSelectedArray.push(foodSelected.name);
-		// console.log(foodSelectedArray);
-		createBlablapBody(addPropseatersArmy, body, eaterIndex, foodSelected, scene);
+	Object.keys(eatersArmy).forEach((eaterName, eaterIndex) => {
+		const foodSelected = assignRandomFood(foodCollection, eaterName);
+		createBlablapBody(addPropseatersArmy, eaterName, eaterIndex, foodSelected, scene);
 	});
+	// console.log(possibleMatchBlablas);
+	// console.log(matchBlablas);
 };
 
 const createSkeletonBlablap = (blablap, eaterIndex) => {
@@ -105,7 +157,6 @@ export const initEaters = (scene, numEaters, numKrans, foodCollection) => {
 	quantityEaters = numEaters;
 	quantityKrans = numKrans;
 	totalOrganism = quantityEaters + quantityKrans;
-	console.log(foodCollection);
 	populateArmy(foodCollection, scene);
 	return eatersArmy;
 };

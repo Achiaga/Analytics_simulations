@@ -25,13 +25,11 @@ export function setRandomCoords(radius, circle) {
 // Food Uniform Distribution
 export function setUniformDistribution(index, num) {
 	let layer5 = Math.round(num / 2.5);
-	let layer4 = Math.round(num / 3.3);
-	let layer3 = Math.round(num / 5);
-
-	if (index > layer5 + layer4) {
-		return setOriginPostion(index, layer3, 3);
+	let layer4 = Math.round(num / 3);
+	if (index >= layer5 + layer4) {
+		return setOriginPostion(index, num - (layer5 + layer4), 3);
 	}
-	if (index > layer5) {
+	if (index >= layer5) {
 		return setOriginPostion(index, layer4, 6);
 	}
 	return setOriginPostion(index, layer5, 10);
