@@ -12,14 +12,14 @@ let scene, camera, renderer;
 let isRunning = true;
 
 //OBJECTS
-let eaterArmy, foodCollection, foodObjectsCollision;
+let eaterArmy, foodCollection, foodObjectsCollision, eatersFoodMatch;
 
 let numEaters = 10;
 let numKrans = 2;
 let numFood = 20;
 
 //MOVEMENT
-const vel = 0.2;
+const vel = 0.4;
 let getFoodRandom = false;
 
 //REPRODUCE
@@ -42,7 +42,7 @@ const handleGround = () => {
 
 // Create Eaters
 const handleInitEater = () => {
-	eaterArmy = initEaters(scene, numEaters, numKrans, foodCollection);
+	[eaterArmy, eatersFoodMatch] = initEaters(scene, numEaters, numKrans, foodCollection);
 };
 
 // Create Food
@@ -89,13 +89,13 @@ const handleReproduce = () => {
 	[numEaters, numKrans] = reproduce(
 		eaterArmy,
 		foodCollection,
+		eatersFoodMatch,
 		foodObjectsCollision,
-		numEaters,
-		numKrans,
+		getFoodRandom,
 		scene
 	);
-	handleInitEater();
 	handleInitFood();
+	handleInitEater();
 	shouldReproduce = false;
 };
 

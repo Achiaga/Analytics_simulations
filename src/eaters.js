@@ -75,8 +75,8 @@ const createeatersArmy = () => {
 
 let FoodIdList = [];
 let FoodBannedList = [];
-let possibleMatchBlablas = {};
 let matchBlablas = {};
+let eatersFoodMatch = {};
 
 const randomNumber = (max, min) => {
 	return Math.floor(Math.random() * (max - min)) + min;
@@ -88,17 +88,42 @@ const generateNewRandom = (randFood, foodCollectionKeys) => {
 	if (randFood >= lenght / 2) return randomNumber(randFood - 1, 0);
 };
 
+const handleMatchBlas = (eater1, eater2) => {
+	let firstBla = eater1.substr(0, 3);
+	let secondBla = eater2.substr(0, 3);
+	if (firstBla === secondBla && secondBla === 'bla') {
+		eatersFoodMatch = {
+			...eatersFoodMatch,
+			[eater1]: 'shared',
+			[eater2]: 'shared',
+		};
+	}
+	if (firstBla === secondBla && secondBla === 'kra') {
+		eatersFoodMatch = {
+			...eatersFoodMatch,
+			[eater1]: 'fight',
+			[eater2]: 'fight',
+		};
+	}
+	if (firstBla !== secondBla) {
+		eatersFoodMatch = {
+			...eatersFoodMatch,
+			[eater1]: 'take',
+			[eater2]: 'take',
+		};
+	}
+};
+
 const checkFoodRep = (FoodID, randFood, eaterName, foodCollectionKeys) => {
 	if (FoodBannedList.includes(FoodID)) {
 		randFood = generateNewRandom(randFood, foodCollectionKeys);
-		console.log(possibleMatchBlablas[FoodID]);
-		console.log({ eaterName });
+		handleMatchBlas(matchBlablas[FoodID], eaterName);
 		return randFood;
 	}
 	if (!FoodIdList.includes(FoodID)) {
 		FoodIdList.push(FoodID);
-		possibleMatchBlablas = {
-			...possibleMatchBlablas,
+		matchBlablas = {
+			...matchBlablas,
 			[FoodID]: eaterName,
 		};
 		return randFood;
@@ -106,12 +131,7 @@ const checkFoodRep = (FoodID, randFood, eaterName, foodCollectionKeys) => {
 	if (FoodIdList.includes(FoodID)) {
 		FoodIdList.push(FoodID);
 		FoodBannedList.push(FoodID);
-		console.log(possibleMatchBlablas[FoodID]);
-		console.log({ eaterName });
-		// matchBlablas = {
-		// 	...matchBlablas,
-		// 	[eaterName]:
-		// }
+		handleMatchBlas(matchBlablas[FoodID], eaterName);
 		return randFood;
 	}
 
@@ -133,8 +153,6 @@ const populateArmy = (foodCollection, scene) => {
 		const foodSelected = assignRandomFood(foodCollection, eaterName);
 		createBlablapBody(addPropseatersArmy, eaterName, eaterIndex, foodSelected, scene);
 	});
-	// console.log(possibleMatchBlablas);
-	// console.log(matchBlablas);
 };
 
 const createSkeletonBlablap = (blablap, eaterIndex) => {
@@ -154,9 +172,13 @@ const addPropseatersArmy = (blablap, blaWarrior, eaterIndex) => {
 
 export const initEaters = (scene, numEaters, numKrans, foodCollection) => {
 	eatersArmy = {};
+	FoodIdList = [];
+	FoodBannedList = [];
+	matchBlablas = {};
+	eatersFoodMatch = {};
 	quantityEaters = numEaters;
 	quantityKrans = numKrans;
 	totalOrganism = quantityEaters + quantityKrans;
 	populateArmy(foodCollection, scene);
-	return eatersArmy;
+	return [eatersArmy, eatersFoodMatch];
 };

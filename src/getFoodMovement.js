@@ -25,12 +25,11 @@ export function getFoodMovement(eater, numEaters, numKrans, vel, modifyReproduce
 		if (!eater.userData.feed) arrivedFoodCont += 1;
 		eater.userData.feed = true;
 		if (arrivedFoodCont === numEaters + numKrans && !eater.userData.hasMoved) {
-			setInterval(() => {
-				let foodName = eater.userData.foodName;
-				deleteElScene(foodName, scene);
-				eater.userData.actualDestX = eater.userData.outDestX;
-				eater.userData.actualDestZ = eater.userData.outDestZ;
-			}, 1000);
+			let foodName = eater.userData.foodName;
+			deleteElScene(foodName, scene);
+			eater.userData.actualDestX = eater.userData.outDestX;
+			eater.userData.actualDestZ = eater.userData.outDestZ;
+
 			eater.userData.hasMoved = true;
 		}
 		return;
@@ -47,7 +46,8 @@ export function getFoodMovement(eater, numEaters, numKrans, vel, modifyReproduce
 
 		if (finishCont === numEaters + numKrans) {
 			finishCont = 0;
-			// modifyReproduce(true);
+			arrivedFoodCont = 0;
+			modifyReproduce(true);
 			return;
 		}
 	}

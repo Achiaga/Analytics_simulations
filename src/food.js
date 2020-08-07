@@ -7,7 +7,7 @@ const foodSkeleton = {
 	heightSegmets: 20,
 };
 
-let quantityFood, random, distributionFood;
+let quantityFood, distributionFood;
 let FoodCollection = {};
 var foodObjectsCollision = [];
 
@@ -38,14 +38,14 @@ const createSkeletonFood = (index, scene) => {
 	foodBody.position.z = posZ;
 	foodBody.position.y = 1.6;
 	foodBody.name = 'food' + index;
-	foodObjectsCollision.push(foodBody);
+	if (distributionFood) foodObjectsCollision.push(foodBody);
 	if (!distributionFood) {
 		var foodBodyb = new THREE.Mesh(geometry, material);
 		foodBody.add(foodBodyb);
 		foodBodyb.position.x += 0.4;
 		foodBodyb.position.z += 0.4;
+		foodBodyb.name = 'subfood' + index;
 	}
-
 	return foodBody;
 };
 
@@ -53,7 +53,6 @@ export const initFood = (scene, numFood, getFoodRandom) => {
 	FoodCollection = {};
 	foodObjectsCollision = [];
 	quantityFood = numFood;
-	random = getFoodRandom;
 	distributionFood = getFoodRandom;
 	createFoodCollection(scene);
 	return [FoodCollection, foodObjectsCollision, quantityFood];
