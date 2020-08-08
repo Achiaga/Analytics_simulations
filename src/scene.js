@@ -32,10 +32,13 @@ const initLight = () => {
 	light = new THREE.HemisphereLight(0xffffff, 0x444444);
 	light.position.set(0, 20, 0);
 
+	let pointlLight = new THREE.PointLight(0xffffff, 220, 220);
+	pointlLight.position.set(0, 80, 0);
+
 	directionalLight = new THREE.DirectionalLight(0xffffff);
 	directionalLight.position.set(0, 20, 10);
 
-	return [light, directionalLight];
+	return [light, pointlLight, directionalLight];
 };
 
 export const initScene = () => {
@@ -46,6 +49,12 @@ export const initScene = () => {
 		alpha: true,
 		antialias: true,
 	});
+
+	renderer.physicallyCorrectLights = true;
+	renderer.outputEncoding = THREE.sRGBEncoding;
+
+	renderer.gammaOutput = true;
+	renderer.gammaFactor = 2.2;
 
 	new OrbitControls(camera, renderer.domElement);
 
@@ -61,8 +70,9 @@ export const initScene = () => {
 	});
 
 	//LIGHT
-	const [light, directionalLight] = initLight();
+	const [light, pointlLight, directionalLight] = initLight();
 	scene.add(light);
+	scene.add(pointlLight);
 	scene.add(directionalLight);
 
 	return [scene, camera, renderer];

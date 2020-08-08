@@ -58,6 +58,6 @@ const resetGlobalValues = (eaterArmy, foodCollection, foodObjectsCollision, eate
 	foodObjectsCollision = [];
 	eatersFoodMatch = {};
 	for (var i = scene.children.length - 1; i >= 4; i--) {
-		scene.remove(scene.children[i]);
+		if (scene.children[i].name !== 'land') scene.remove(scene.children[i]);
 	}
 };
