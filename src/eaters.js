@@ -14,7 +14,7 @@ const blablapSkeleton = {
 };
 
 const createBlablapBody = (callback, blaWarrior, eaterIndex, foodSelected, scene) => {
-	const [positionX, positionZ] = setOriginPostion(eaterIndex, totalOrganism, 15);
+	const [positionX, positionZ] = setOriginPostion(eaterIndex, totalOrganism, 17);
 	const [outDestX, outDestZ] = [positionX, positionZ];
 	const [actualDestX, actualDestZ] = setRandomCoords(7);
 	const raceEater = eaterIndex < quantityEaters ? 'blabla.gltf' : 'redBlabla.gltf';

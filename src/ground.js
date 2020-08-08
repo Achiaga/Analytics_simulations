@@ -11,9 +11,9 @@ export const initGround = (scene) => {
 			scene.add(land);
 			land.name = 'land';
 
-			land.position.x = 0;
-			land.position.z = 0;
-			land.position.y = -1;
+			land.position.x = -0.5;
+			land.position.z = 1.5;
+			land.position.y = 1.4;
 		},
 		function (xhr) {
 			if (xhr.loaded === xhr.total) {

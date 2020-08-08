@@ -24,8 +24,6 @@ export const reproduce = (
 			if (eatersFoodMatch[blaWarrior] === 'take') {
 				let halfProbSurvive = Math.round(Math.random()) === 1 ? 1 : 0;
 				let halfProbreprod = Math.round(Math.random()) === 1 ? 2 : 1;
-				console.log(halfProbSurvive);
-				console.log(halfProbreprod);
 				raceType === 'blabla' ? (quantityEaters += halfProbSurvive) : (quantityKrans += halfProbreprod);
 			}
 			if (eatersFoodMatch[blaWarrior] === 'fight') {
