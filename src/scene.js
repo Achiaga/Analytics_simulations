@@ -34,7 +34,7 @@ const initLight = () => {
 	light.position.set(0, 20, 0);
 
 	let pointlLight = new THREE.PointLight(0xffffff, 200, 200);
-	pointlLight.position.set(0, 80, 0);
+	pointlLight.position.set(0, 60, 0);
 
 	directionalLight = new THREE.DirectionalLight(0xffffff, 4);
 	directionalLight.position.set(100, 100, 100);
