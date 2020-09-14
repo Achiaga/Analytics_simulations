@@ -13,7 +13,7 @@ module.exports = {
 		hot: true,
 	},
 	plugins: [
-		new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
+		// new CleanWebpackPlugin(['**/*'], { root: './dist', exclude: ['models'] }),
 		new HtmlWebpackPlugin({
 			title: 'Ninja Simulations',
 		}),
